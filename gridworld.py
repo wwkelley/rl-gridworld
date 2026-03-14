@@ -191,14 +191,15 @@ def main():
     environment = Environment((5, 5), (0, 0), actions, 20, -0.1, entities)
     agent = Agent(alpha=0.1, gamma=0.9, epsilon=0.5)
 
-    #Epsilon decay
-    agent.epsilon = max(0.01, agent.epsilon * 0.995)
-
     # Run 500 episodes
     for episode in range(500):
         environment.reset()
         state = environment.get_state()
         total_reward = 0
+
+        #Epsilon decay
+        agent.epsilon = max(0.01, agent.epsilon * 0.995)
+
 
         for step in range(20):
             action = agent.select_action(state, actions)
