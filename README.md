@@ -1,5 +1,4 @@
-# reinforcement-learning-playground
+# rl-gridworld
 
-Simple grid world space for conducting reinforcement learning experiments. 
+Simple grid world implementation for conducting reinforcement learning experiments. 
 See branches for specific experiments.
-Planned: Braitenberg+
