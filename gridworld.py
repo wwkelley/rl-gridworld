@@ -1,10 +1,11 @@
 import numpy as np
 import random
+from collections import defaultdict
 
 
-# ========================
-# ENVIRONMENT CLASSES
-# ========================
+#========================
+#ENVIRONMENT CLASSES
+#========================
 
 class Environment:
     def __init__(self, dims: tuple, agent_position: tuple, actions: dict, max_steps: int, step_penalty: float, entities: list = None):
@@ -13,11 +14,16 @@ class Environment:
         self.max_steps = max_steps
         self.step_penalty = step_penalty
 
-        #Space
+        #Dimensions and agent placement
         self.dims = dims
         self.agent_position = agent_position
+        assert self.is_valid_position(agent_position), f"Agent placed at invalid position: {agent_position}"
         self.init_agent_position = agent_position
+
+        #Entity placement
         self.entities = entities if entities is not None else []
+        for entity in self.entities:
+            assert self.is_valid_position(entity.get_position()), f"Entity placed at invalid position: {entity.get_position()}"
         self.init_entities = list(entities) if entities is not None else []
 
         #Interaction
@@ -132,14 +138,43 @@ class Entity:
         self.position = self.init_position
 
 
-# ========================
-# AGENT CLASSES
-# ========================
+#========================
+#AGENT CLASSES
+#========================
 
 class Agent:
     #TO-DO: Add Q-learning functionality!
-    def __init__(self, position: tuple, moves: dict = None):
-        self.foo = "foo"
+    def __init__(self, alpha: float, gamma: float, epsilon: float):
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.q_table = defaultdict(float)
+
+    def select_action(self, state: np.array, actions: dict) -> str:
+        
+        #Flatten numpy array to use as key for q-table.
+        state_key = tuple(state.flatten())
+
+        #Epsilon-greedy strategy for action selection
+        if random.random() < self.epsilon:
+            return random.choice(list(actions.keys()))
+        else:
+            return max(actions.keys(), key=lambda a: self.q_table[(state_key, a)])
+
+    def update(self, state: np.array, action: str, reward: float, next_state: np.array, actions: dict) -> None:
+
+        #Flatten numpy array to use as key for q-table.
+        current_state_key = tuple(state.flatten())
+        next_state_key = tuple(next_state.flatten())
+
+        current_qsa = self.q_table[(current_state_key, action)]
+        max_q_splus1_a = max(self.q_table[(next_state_key, a)] for a in actions.keys())
+
+        #Update qsa according to Bellman equation
+        updated_qsa = current_qsa + (self.alpha * (reward + (self.gamma * max_q_splus1_a) - current_qsa))
+
+        #Add updated qsa to q-table
+        self.q_table[(current_state_key, action)] = updated_qsa
 
 def main():
     actions = {
@@ -149,32 +184,38 @@ def main():
         "right": (0, 1),
         "left": (0, -1)
     }
-    resource_one = Entity((4, 5), 1)
-    resource_two = Entity((3, 5), 1.5)
+    resource_one = Entity((2, 2), 1)
+    resource_two = Entity((2, 3), 1.5)
     entities = [resource_one, resource_two]
 
-    environment = Environment((10, 10), (3, 4), actions, 20, -0.1, entities)
-    
-    print("Initial state:")
-    environment.render()
+    environment = Environment((5, 5), (0, 0), actions, 20, -0.1, entities)
+    agent = Agent(alpha=0.1, gamma=0.9, epsilon=0.5)
 
-    print("\nStep right:")
-    print(environment.step('right'))
-    environment.render()
+    #Epsilon decay
+    agent.epsilon = max(0.01, agent.epsilon * 0.995)
 
-    print("\nStep up (onto resource):")
-    print(environment.step('up'))
-    environment.render()
+    # Run 500 episodes
+    for episode in range(500):
+        environment.reset()
+        state = environment.get_state()
+        total_reward = 0
 
-    print("\nStep right (onto resource):")
-    print(environment.step('right'))
-    environment.render()
+        for step in range(20):
+            action = agent.select_action(state, actions)
+            done, reward, next_state = environment.step(action)
+            agent.update(state, action, reward, next_state, actions)
+            total_reward += reward
+            state = next_state
+            if done:
+                break
 
-    print("\nReset:")
-    environment.reset()
-    environment.render()
-    print("Step num after reset:", environment.get_step_num())
-    print("Agent position after reset:", environment.get_agent_position())
+        if episode % 100 == 0:
+            print(f"Episode {episode + 1}, total reward: {total_reward:.2f}")
+
+    print(f"\nQ-table entries after training: {len(agent.q_table)}")
+    print("Sample entries:")
+    for key, value in list(agent.q_table.items())[:5]:
+        print(f"  action: {key[1]}, q-value: {value:.4f}")
 
 if __name__=="__main__":
     main()
