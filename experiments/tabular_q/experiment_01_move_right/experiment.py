@@ -21,16 +21,10 @@ import sys
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-
-#Import gridworld
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-from gridworld import Environment, Entity, Agent
+from gridworld import Environment, Entity, TabularQAgent
 
 
-#========================
-#Environment Setup
-#========================
-
+###Environment Setup
 actions = {
         "stay": (0, 0), 
         "up": (-1, 0),
@@ -46,12 +40,10 @@ entities = [resource_one, resource_two]
 max_steps = 3
 
 environment = Environment((5, 5), (2, 2), actions, max_steps, -0.1, entities)
-agent = Agent(alpha=0.1, gamma=0.9, epsilon=0.5)
+agent = TabularQAgent(alpha=0.1, gamma=0.9, epsilon=0.5)
 
 
-#========================
-#Training Loop
-#========================
+###Training Loop
 
 episode_num = 500
 epsilon_decay = 0.995
@@ -83,9 +75,7 @@ for episode in range(episode_num):
             print(f"Episode {episode + 1}, total reward: {total_reward:.2f}")
 
 
-#========================
-#Results
-#========================
+###Results
 
 #Print q for state with both resources present
 env_with_both_resources = Environment((5, 5), (2, 2), actions, 3, -0.1, [Entity((2,3), 2), Entity((2,4), 2)])
@@ -113,6 +103,7 @@ print("Q-values with no resource present")
 for action in actions.keys():
     print(f"    {action}: {agent.q_table[(state_with_no_resource, action)]:.4f}")
 
+
 ###Plotting
 
 #Smoothing method for cumulative reward plot
@@ -127,4 +118,8 @@ plt.ylabel('Total Reward')
 plt.title('Experiment 01: Move Right')
 plt.legend()
 plt.tight_layout()
-plt.savefig('results_figures/reward_curve.png')
+
+#Saving
+results_figures_dir = os.path.join(os.path.dirname(__file__), 'results_figures')
+os.makedirs(results_figures_dir, exist_ok=True)
+plt.savefig(os.path.join(results_figures_dir, 'reward_curve.png'))
