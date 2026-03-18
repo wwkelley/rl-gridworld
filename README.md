@@ -10,11 +10,11 @@ pip install -e .
 ```
 
 ## Project Structure
-  # gridworld/
+  ### gridworld/
   - Core environment and agent classes
-  # experiments/
+  ### experiments/
   - RL experiments with visualizations and writeups
-  #  test/
+  ###  test/
   - Unit tests
 
 ## Experiments
