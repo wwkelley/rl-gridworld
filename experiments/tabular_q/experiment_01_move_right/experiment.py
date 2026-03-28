@@ -33,8 +33,8 @@ actions = {
         "left": (0, -1)
     }
 
-resource_one = Entity((2, 3), 2)
-resource_two = Entity((2, 4), 2)
+resource_one = Entity((2, 3), 2, 2)
+resource_two = Entity((2, 4), 2, 2)
 entities = [resource_one, resource_two]
 
 max_steps = 3
@@ -78,7 +78,7 @@ for episode in range(episode_num):
 ###Results
 
 #Print q for state with both resources present
-env_with_both_resources = Environment((5, 5), (2, 2), actions, 3, -0.1, [Entity((2,3), 2), Entity((2,4), 2)])
+env_with_both_resources = Environment((5, 5), (2, 2), actions, 3, -0.1, [Entity((2,3), 2, 2), Entity((2,4), 2, 2)])
 state_with_both_resources = tuple(env_with_both_resources.get_state().flatten())
 
 print("Q-values with both resources present")
@@ -87,7 +87,7 @@ for action in actions.keys():
 
 
 #Print q for state with one resource present
-env_with_one_resource = Environment((5, 5), (2, 3), actions, 3, -0.1, [Entity((2,4), 2)])
+env_with_one_resource = Environment((5, 5), (2, 3), actions, 3, -0.1, [Entity((2,4), 2, 2)])
 state_with_one_resource = tuple(env_with_one_resource.get_state().flatten())
 
 print("Q-values with one resource present")

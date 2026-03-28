@@ -6,7 +6,7 @@ from gridworld.agent import TabularQAgent
 @pytest.fixture
 def basic_environment():
     actions = {"stay": (0,0), "right": (0,1), "left": (0,-1), "up": (-1,0), "down": (1,0)}
-    entities = [Entity((0,2), 1.0)]
+    entities = [Entity((0,2), 1.0, 2)]
     return Environment((5,5), (0,0), actions, 3, -0.1, entities)
 
 def test_is_valid_position(basic_environment):
@@ -32,7 +32,7 @@ def test_invalid_placement():
         Environment((5,5), (10,10), actions, 3, -0.1)
 
     with pytest.raises(AssertionError):
-        Environment((5,5), (0, 0), actions, 3, -0.1, [Entity((10, 10), 1.0)])
+        Environment((5,5), (0, 0), actions, 3, -0.1, [Entity((10, 10), 1.0, 2)])
 
 def test_step(basic_environment):
 

@@ -73,7 +73,7 @@ class Environment:
         #Add entity positions
         for entity in self.entities:
             entity_row, entity_col = entity.get_position()
-            state[entity_row, entity_col] = 2
+            state[entity_row, entity_col] = entity.get_encoding()
 
         return state
 
@@ -120,7 +120,7 @@ class Environment:
         #Render Entity location
         for entity in self.entities:
             entity_row, entity_col = entity.get_position()
-            grid[entity_row, entity_col] = 2
+            grid[entity_row, entity_col] = entity.get_encoding()
             
         print(grid)
 
@@ -128,10 +128,11 @@ class Entity:
     """
     Static entity in the gridworld with an associated reward or penalty value.
     """
-    def __init__(self, position: tuple, reward: float):
+    def __init__(self, position: tuple, reward: float, encoding: int):
         self.position = position
         self.init_position = position
         self.reward = reward
+        self.encoding = encoding
 
     def get_position(self) -> tuple:
         return self.position
@@ -139,11 +140,17 @@ class Entity:
     def set_position(self, position: tuple) -> None:
         self.position = position
 
+    def get_reward(self) -> float:
+        return self.reward
+
     def set_reward(self, reward: float) -> None:
         self.reward = reward
 
-    def get_reward(self) -> float:
-        return self.reward
+    def get_encoding(self) -> int:
+        return self.encoding
+    
+    def set_encoding(self, encoding: int) -> None:
+        self.encoding = encoding
 
     def reset(self) -> None:
         self.position = self.init_position
