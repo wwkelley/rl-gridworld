@@ -19,7 +19,6 @@ pip install -e .
 
 ## Assumptions
 - The state is the entirety of the environment grid.
-- All 'entities', with positive or negative reward, are represented in the same way (to be changed). 
 - Agent actions are limited to movements in the grid.
 - When an agent reaches an entity's location, the entity is removed from the grid.
 
@@ -29,7 +28,6 @@ pip install -e .
 | exp01_move_right | Agent learns to collect two adjacent resources | Tabular Q-Learning | experiments/tabular_q/experiment_01_move_right |
 
 ## Roadmap
-- Variable encoding representation for entities
 - Monte Carlo agent
 - DQN agent
 - Variable state representations
