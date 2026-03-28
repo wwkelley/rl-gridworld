@@ -104,15 +104,6 @@ for action in actions.keys():
     print(f"    {action}: {agent.q_table[(state_with_no_resource, action)]:.4f}")
 
 
-#Print q for state with both resources present and one action ('left') already taken
-env_with_both_resources_left = Environment((5, 5), (2, 1), actions, 3, -0.1, [Entity((2,3), 2, 2), Entity((2,4), 2, 2)])
-state_with_both_resources_left = tuple(env_with_both_resources_left.get_state().flatten())
-
-print("Q-values with both resources present")
-for action in actions.keys():
-    print(f"    {action}: {agent.q_table[(state_with_both_resources_left, action)]:.4f}")
-
-
 ###Plotting
 
 #Smoothing method for cumulative reward plot
