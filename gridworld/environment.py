@@ -99,9 +99,9 @@ class Environment:
 
         return (done, self.step_penalty, self.get_state())
 
-    def reset(self) -> None:
+    def reset(self, agent_start_position=None) -> None:
         self.step_num = 0
-        self.agent_position = self.init_agent_position
+        self.agent_position = agent_start_position if agent_start_position is not None else self.init_agent_position
         self.entities = list(self.init_entities)
         for entity in self.entities:
             entity.reset()
