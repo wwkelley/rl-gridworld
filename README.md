@@ -26,6 +26,7 @@ pip install -e .
 | Experiment | Description | Algorithm | Location |
 |------------|-------------|-----------|----------|
 | exp01_move_right | Agent learns to collect two adjacent resources | Tabular Q-Learning | experiments/tabular_q/experiment_01_move_right |
+| exp02_find_reward | Agent learns to collect two adjacent resources from a random starting position | Tabular Q-Learning | /c/Users/willk/programming/reinforcement_learning/tutorial_20260228/experiments/tabular_q/experiment_02_find_reward |
 
 ## Roadmap
 - Monte Carlo agent
